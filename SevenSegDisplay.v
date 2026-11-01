@@ -1,6 +1,6 @@
-`timescale 1ns / 1ps
+//Full 7SD wrapper file containing relevant modules
 
-module SevenSeg(
+module SevenSegDisplay(
     input clk, rstn, en,
     input [11:0] count,
     output [6:0] cat,
