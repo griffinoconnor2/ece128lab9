@@ -7,7 +7,7 @@ module RegFile (
 //Declare registers
 reg [3:0] R0, R1;
 
-//Sequential logic to write registers
+//Sequential decoder logic to write registers
 always @(posedge clk) begin
     if (rst == 1'b1) begin
         R0 <= 4'b0000;
