@@ -1,8 +1,11 @@
-//Full 7SD wrapper file containing relevant modules
+//Altered 7SD wrapper file containing relevant modules
+//changes for lab 9:
+//reduced count input from 12 bits (old counter length) to 8 bits (product length)
+//0 extended BintoBdd count input as to not alter bintobcd internal code
 
 module SevenSegDisplay(
-    input clk, rstn, en,
-    input [11:0] count,
+    input clk, rstn,
+    input [7:0] count,
     output [6:0] cat,
     output [3:0] an,
     output rdy
@@ -12,7 +15,7 @@ module SevenSegDisplay(
     wire [15:0] bcd;
 
     ClockDivider u0(.clkin(clk), .rstn(rstn), .clkout1KHz(clk1KHz));
-    BintoBCD u1(.clk(clk), .rstn(rstn), .en(en), .count(count), .BCD(bcd), .rdy(rdy));
+    BintoBCD u1(.clk(clk), .rstn(rstn), .en(1'b1), .count({4'b0000, count}), .BCD(bcd), .rdy(rdy));
     MSD u2(.bcd(bcd), .clk(clk1KHz), .rstn(rstn), .cat(cat), .an(an));
 
 endmodule
