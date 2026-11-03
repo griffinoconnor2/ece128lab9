@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-module ROM__file_tb();
+module ROM_file_tb();
 
 //Declare internal signals
 reg [2:0] ROM_addr;
