@@ -6,9 +6,9 @@ module ROM_file(
 //8 4-bit wide memory locations
 reg [3:0] ROM_mem [0:7];
 
-//Read/load data from txt into ROM_mem array
+//Read/load data from mem file into ROM_mem array
 initial begin
-    $readmemb("ROMdata.txt", ROM_mem);
+    $readmemb("ROMdata.mem", ROM_mem);
 end
 
 //When ROM_addr updates, ROM_data nor reflects data held at new address
