@@ -9,6 +9,9 @@ module ControlUnit(
 parameter S0_idle = 0, S1_read_rom1 = 1, S2_read_rom2 = 2, S3_write_ram = 3, S4_read_ram = 4;
 reg [2:0] NS, PS;
 
+//ROM tracking variables to allow system to stay in read ram state unless inputs change
+reg [2:0] prev_rom_adr1, prev_rom_adr2;
+
 //Combinational State Transtion logic
 always @(*) begin
     case(PS)
@@ -16,17 +19,30 @@ always @(*) begin
         S1_read_rom1: NS = S2_read_rom2;
         S2_read_rom2: NS = S3_write_ram;
         S3_write_ram: NS = S4_read_ram;
-        S4_read_ram: NS = S0_idle;
+        S4_read_ram: begin
+            if ((rom_adr1 != prev_rom_adr1) || (rom_adr2 != prev_rom_adr2)) //If inputs update, return to initial state to recalculate and write
+                NS = S0_idle;
+            else
+                NS = S4_read_ram; //otherwise, stay in read stage until next input update to allow reading of stored ram lines
+        end
         default: NS = S0_idle;
     endcase
 end
 
 //Sequential State Transition Logic
 always @(posedge clk) begin
-    if (rst == 1)
+    if (rst == 1) begin
         PS <= S0_idle;
-    else
+        prev_rom_adr1 <= 3'b000;
+        prev_rom_adr2 <= 3'b000;
+    end
+    else begin
         PS <= NS;
+        if (PS == S3_write_ram) begin //if in write state, load current rom addresses to track future updates (to exit read state)
+            prev_rom_adr1 <= rom_adr1;
+            prev_rom_adr2 <= rom_adr2;
+        end
+    end
 end
 
 //Control Unit Logic
