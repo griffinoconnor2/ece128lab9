@@ -23,17 +23,14 @@ module RAM_file(
             o_read_data <= 8'b0;
         end
         else begin
-            if (i_write_en)
+            if (i_write_en) begin
                 mem[i_addr] <= i_write_data;
+                #1;
+                $writememb("RAMdata.mem", mem);
+            end 
             else
                 o_read_data <= mem[i_addr];
         end
     end
 
-    always@(posedge i_clk) begin
-        if (!i_rst && i_write_en) begin
-            #1;
-            $writememb("RAMdata.mem", mem);
-        end
-    end
 endmodule
