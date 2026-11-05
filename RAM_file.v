@@ -7,7 +7,7 @@ module RAM_file(
     reg [7:0] mem [0:7]; //8 words, 8 bits each
 
     initial begin
-        $readmemb("RAMdata_in.txt", mem);
+        $readmemb("RAMdata_in.mem", mem);
     end
 
     always@(posedge i_clk) begin
@@ -33,7 +33,7 @@ module RAM_file(
     always@(posedge i_clk) begin
         if (!i_rst && i_write_en) begin
             #1;
-            $writememb("RAMdata_out.txt", mem);
+            $writememb("RAMdata_out.mem", mem);
         end
     end
 endmodule
